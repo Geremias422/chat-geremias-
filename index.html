@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/chat-geremias-/manifest.json">
     <title>Geremias & Daniella</title>
     <style>
-<link rel="manifest" href="/chat-geremias-/manifest.json">
-
- * {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -18,571 +17,170 @@
             background-color: #121212;
             height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            justify-content: space-between;
             overflow: hidden;
             position: relative;
+            color: #e0e0e0;
         }
 
-        .heart-bg {
-            position: absolute;
-            color: rgba(255, 117, 140, 0.4);
-            font-size: 22px;
-            animation: floatUp 5s linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(105vh) scale(0.6) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.3) rotate(20deg); opacity: 0; }
-        }
-
-        .chat-container {
-            width: 100%;
-            max-width: 420px;
-            height: 92vh;
-            background: rgba(20, 15, 20, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        /* Cabeçalho e Contador */
+        header {
+            background-color: #1f1f1f;
+            padding: 12px 16px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            align-items: center;
+            border-bottom: 1px solid #2c2c2c;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             z-index: 10;
-            border: 2px solid rgba(255, 117, 140, 0.3);
         }
 
-        .chat-header {
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-            color: white;
-            padding: 16px 20px;
-            text-align: center;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 10px rgba(255, 117, 140, 0.3);
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        header h1 {
+            font-size: 1.1rem;
+            color: #ff4b72;
+            margin-bottom: 4px;
         }
 
-        .chat-header h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
+        #counter {
+            font-size: 0.8rem;
+            color: #a0a0a0;
         }
 
-        .status-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            opacity: 0.95;
-            margin-top: 2px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #4ade80;
-            border-radius: 50%;
-            box-shadow: 0 0 6px #4ade80;
-        }
-
-        .status-dot.offline {
-            background-color: #fca5a5;
-            box-shadow: none;
-        }
-
-        .chat-messages {
+        /* Área de Mensagens */
+        #chat-container {
             flex: 1;
-            padding: 20px;
+            padding: 16px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            position: relative;
-            background-color: transparent;
-        }
-
-        .chat-bg-fixed {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            z-index: 0;
-        }
-
-        .chat-bg-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(20, 10, 15, 0.6);
-            z-index: 1;
-            pointer-events: none;
+            gap: 10px;
         }
 
         .message {
-            max-width: 78%;
-            padding: 10px 14px 18px 14px; /* Espaço embaixo para os ticks */
-            border-radius: 18px;
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 12px;
             font-size: 0.95rem;
             line-height: 1.4;
-            position: relative;
             word-wrap: break-word;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            z-index: 2;
         }
 
-        .message.geremias {
-            background: linear-gradient(135deg, rgba(255, 117, 140, 0.9), rgba(216, 27, 96, 0.9));
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.daniella {
-            background: rgba(255, 255, 255, 0.9);
-            color: #444;
+        .message.received {
+            background-color: #262626;
+            color: #ffffff;
             align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            border: 1px solid #f8bbd0;
+            border-bottom-left-radius: 2px;
         }
 
-        /* Estilo dos Status/Ticks da Mensagem (Pontinhos estilo WhatsApp) */
-        .msg-meta {
-            position: absolute;
-            bottom: 4px;
-            right: 10px;
-            font-size: 0.65rem;
+        .message.sent {
+            background-color: #ff4b72;
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        /* Caixa de Envio */
+        .input-area {
+            background-color: #1f1f1f;
+            padding: 12px;
             display: flex;
-            align-items: center;
-            gap: 4px;
-            opacity: 0.85;
-        }
-
-        .ticks {
-            font-weight: bold;
-            letter-spacing: -2px;
-        }
-
-        .ticks.sent { color: #cfd8dc; }       /* 1 ponto cinza (offline / enviado) */
-        .ticks.delivered { color: #cfd8dc; }  /* 2 pontos cinzas (entregue) */
-        .ticks.read { color: #60a5fa; }       /* 2 pontos azuis (visualizado) */
-
-        .audio-player-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 160px;
-            z-index: 2;
-        }
-
-        .play-audio-btn {
-            background: #d81b60;
-            color: white;
-            border: none;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            flex-shrink: 0;
-        }
-
-        .audio-info {
-            display: flex;
-            flex-direction: column;
-            font-size: 0.8rem;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .chat-input-area {
-            padding: 12px 15px;
-            background: rgba(30, 20, 25, 0.9);
-            display: flex;
-            align-items: center;
             gap: 8px;
-            border-top: 1px solid rgba(255, 117, 140, 0.3);
-            position: relative;
-            z-index: 5;
+            border-top: 1px solid #2c2c2c;
         }
 
-        #recordingIndicator {
-            display: none;
-            position: absolute;
-            top: -45px;
-            left: 15px;
-            background: #ffebee;
-            border: 1px solid #ff758c;
-            color: #c62828;
-            padding: 6px 14px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            align-items: center;
-            gap: 8px;
-            z-index: 20;
-        }
-
-        .pulse-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #d81b60;
-            border-radius: 50%;
-            animation: pulseAnim 1s infinite;
-        }
-
-        @keyframes pulseAnim {
-            0% { transform: scale(0.9); opacity: 1; }
-            50% { transform: scale(1.4); opacity: 0.4; }
-            100% { transform: scale(0.9); opacity: 1; }
-        }
-
-        .action-btn {
-            background: rgba(255, 117, 140, 0.2);
-            border: 1px solid rgba(255, 117, 140, 0.4);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            cursor: pointer;
-            color: #ff758c;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-
-        .action-btn:hover {
-            background: rgba(255, 117, 140, 0.4);
-            transform: scale(1.05);
-        }
-
-        .action-btn.recording {
-            background: #d81b60 !important;
-            color: white !important;
-            animation: pulseAnim 1s infinite;
-        }
-
-        .chat-input-area input[type="text"] {
+        input[type="text"] {
             flex: 1;
             padding: 10px 14px;
-            border: 1px solid rgba(255, 117, 140, 0.4);
             border-radius: 20px;
+            border: 1px solid #3c3c3c;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            font-size: 0.95rem;
             outline: none;
-            font-size: 0.9rem;
-            background: rgba(20, 15, 20, 0.8);
-            color: #fff;
         }
 
-        .chat-input-area input[type="text"]:focus {
-            border-color: #ff758c;
-            box-shadow: 0 0 5px rgba(255, 117, 140, 0.4);
+        input[type="text"]:focus {
+            border-color: #ff4b72;
         }
 
-        .send-btn {
-            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        button {
+            background-color: #ff4b72;
             color: white;
             border: none;
-            padding: 10px 16px;
+            padding: 0 18px;
             border-radius: 20px;
+            font-weight: bold;
             cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 3px 10px rgba(255, 117, 140, 0.4);
-            transition: transform 0.1s;
-            flex-shrink: 0;
+            transition: background 0.2s;
         }
 
-        .send-btn:active {
-            transform: scale(0.95);
+        button:active {
+            background-color: #e03b5f;
         }
     </style>
 </head>
 <body>
 
-    <div id="hearts-container"></div>
+    <header>
+        <h1>Geremias & Daniella ❤️</h1>
+        <div id="counter">A carregar tempo juntos...</div>
+    </header>
 
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1>Geremias & Daniella ❤️</h1>
-            <div class="status-container">
-                <div class="status-dot" id="statusDot"></div>
-                <span id="statusText">Online agora</span>
-            </div>
-        </div>
+    <div id="chat-container">
+        <div class="message received">Olá, meu amor! Bem-vindo ao nosso cantinho especial. 🥰</div>
+    </div>
 
-        <div class="chat-messages" id="messagesContainer">
-            <div class="chat-bg-fixed"></div>
-            <div class="chat-bg-overlay"></div>
-
-            <div class="message daniella">
-                Olá meu amor! Sistema de recibos ativado. ✨
-            </div>
-            <div class="message geremias">
-                Perfeito, agora os pontinhos mostram se foi entregue ou lido! ❤️
-                <div class="msg-meta">
-                    <span class="time">18:28</span>
-                    <span class="ticks read">✓✓</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="chat-input-area">
-            <div id="recordingIndicator">
-                <div class="pulse-dot"></div>
-                <span id="timerText">Gravando: 00:00</span>
-            </div>
-
-            <label for="mediaInput" class="action-btn" title="Enviar Foto">📷</label>
-            <input type="file" id="mediaInput" accept="image/*" style="display: none;">
-
-            <button class="action-btn" id="audioBtn" title="Gravar Áudio">🎤</button>
-
-            <input type="text" id="messageInput" placeholder="Escreve uma mensagem...">
-
-            <button class="send-btn" id="sendBtn">Enviar</button>
-        </div>
+    <div class="input-area">
+        <input type="text" id="messageInput" placeholder="Escreve uma mensagem..." autocomplete="off">
+        <button onclick="sendMessage()">Enviar</button>
     </div>
 
     <script>
-        // Corações flutuantes
-        function createHeart() {
-            const container = document.getElementById('hearts-container');
-            const heart = document.createElement('div');
-            heart.classList.add('heart-bg');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 2 + 4) + 's';
-            container.appendChild(heart);
+        // --- CONTADOR DE TEMPO JUNTOS ---
+        // Altere a data abaixo para o dia em que começaram a namorar (Ano, Mês-1, Dia)
+        // Exemplo: 1 de Janeiro de 2024 seria new Date(2024, 0, 1)
+        const startDate = new Date(2024, 0, 1); 
 
-            setTimeout(() => { heart.remove(); }, 5000);
-        }
-        setInterval(createHeart, 500);
-
-        // Controlo de Atividade e Online/Visto por último
-        let lastActiveTime = Date.now();
-        const statusDot = document.getElementById('statusDot');
-        const statusText = document.getElementById('statusText');
-
-        function atualizarAtividade() {
-            lastActiveTime = Date.now();
-            statusDot.classList.remove('offline');
-            statusText.textContent = "Online agora";
-        }
-
-        window.addEventListener('mousemove', atualizarAtividade);
-        window.addEventListener('keydown', atualizarAtividade);
-        window.addEventListener('touchstart', atualizarAtividade);
-
-        setInterval(() => {
-            const diffSeconds = Math.floor((Date.now() - lastActiveTime) / 1000);
-
-            if (diffSeconds < 25) {
-                statusDot.classList.remove('offline');
-                statusText.textContent = "Online agora";
-            } else if (diffSeconds < 60) {
-                statusDot.classList.add('offline');
-                statusText.textContent = `Visto há ${diffSeconds} segundos`;
-            } else {
-                const diffMins = Math.floor(diffSeconds / 60);
-                statusDot.classList.add('offline');
-                statusText.textContent = diffMins === 1 ? "Visto há 1 minuto" : `Visto há ${diffMins} minutos`;
-            }
-        }, 10000);
-
-        // Som de pop
-        function playPopSound() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const ctx = new AudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.25);
-            } catch (e) {}
-        }
-
-        const sendBtn = document.getElementById('sendBtn');
-        const messageInput = document.getElementById('messageInput');
-        const messagesContainer = document.getElementById('messagesContainer');
-
-        function obterHoraAtual() {
+        function updateCounter() {
             const now = new Date();
-            return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            const diff = now - startDate;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('counter').innerText = 
+                `Juntos há ${days} dias, ${hours}h ${minutes}m ${seconds}s ❤️`;
         }
 
-        function enviarMensagem() {
-            const text = messageInput.value.trim();
-            if (text !== '') {
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        // --- FUNÇÃO DE ENVIAR MENSAGEM ---
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+
+            if (text !== "") {
+                const container = document.getElementById('chat-container');
+                
+                // Cria a mensagem enviada
                 const msgDiv = document.createElement('div');
-                msgDiv.classList.add('message', 'geremias');
-                
-                const timeStr = obterHoraAtual();
+                msgDiv.className = 'message sent';
+                msgDiv.innerText = text;
+                container.appendChild(msgDiv);
 
-                // Simulação inteligente de status:
-                // Se o navegador estiver sem internet (navigator.onLine === false), fica 1 pontinho cinza (enviado).
-                // Se estiver com internet, simula a entrega (2 pontos cinzas) e depois a leitura (2 pontos azuis).
-                const isOnlineNet = navigator.onLine;
-                
-                let tickClass = 'sent';
-                let tickSymbol = '•'; // 1 pontinho se sem internet
-
-                if (isOnlineNet) {
-                    tickClass = 'delivered';
-                    tickSymbol = '✓✓'; // 2 pontinhos cinzas (entregue)
-                }
-
-                msgDiv.innerHTML = `
-                    ${text}
-                    <div class="msg-meta">
-                        <span class="time">${timeStr}</span>
-                        <span class="ticks ${tickClass}" id="lastTick">${tickSymbol}</span>
-                    </div>
-                `;
-
-                messagesContainer.appendChild(msgDiv);
-                messageInput.value = '';
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                
-                atualizarAtividade();
-                playPopSound();
-
-                // Se houver internet, simula que a outra pessoa recebeu e depois visualizou (ficando azul)
-                if (isOnlineNet) {
-                    setTimeout(() => {
-                        const tickElement = msgDiv.querySelector('#lastTick');
-                        if (tickElement) {
-                            tickElement.className = 'ticks read';
-                            tickElement.innerHTML = '✓✓'; // Fica azul (visualizado)
-                        }
-                    }, 2000); // 2 segundos depois fica azul
-                }
+                input.value = "";
+                container.scrollTop = container.scrollHeight;
             }
         }
 
-        sendBtn.addEventListener('click', enviarMensagem);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') enviarMensagem();
-        });
-
-        // Gravação de Áudio
-        const audioBtn = document.getElementById('audioBtn');
-        const recordingIndicator = document.getElementById('recordingIndicator');
-        const timerText = document.getElementById('timerText');
-
-        let mediaRecorder;
-        let audioChunks = [];
-        let timerInterval;
-        let secondsElapsed = 0;
-        let isRecording = false;
-
-        audioBtn.addEventListener('click', async () => {
-            if (!isRecording) {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    let mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : 'audio/webm';
-                    
-                    mediaRecorder = new MediaRecorder(stream, { mimeType });
-                    audioChunks = [];
-
-                    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-
-                    mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks, { type: mimeType });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        const timeStr = obterHoraAtual();
-                        
-                        const msgDiv = document.createElement('div');
-                        msgDiv.classList.add('message', 'geremias');
-                        
-                        const playerBox = document.createElement('div');
-                        playerBox.classList.add('audio-player-box');
-
-                        const playBtn = document.createElement('button');
-                        playBtn.classList.add('play-audio-btn');
-                        playBtn.innerHTML = '▶';
-
-                        const audioInfo = document.createElement('div');
-                        audioInfo.classList.add('audio-info');
-                        audioInfo.innerHTML = `<span>Áudio gravado</span><span style="font-size:0.7rem; font-weight:normal;">Toque para ouvir</span>`;
-
-                        const audioElement = new Audio(audioUrl);
-
-                        playBtn.addEventListener('click', () => {
-                            if (audioElement.paused) {
-                                audioElement.play();
-                                playBtn.innerHTML = '⏸';
-                            } else {
-                                audioElement.pause();
-                                playBtn.innerHTML = '▶';
-                            }
-                        });
-
-                        audioElement.addEventListener('ended', () => { playBtn.innerHTML = '▶'; });
-
-                        playerBox.appendChild(playBtn);
-                        playerBox.appendChild(audioInfo);
-                        msgDiv.appendChild(playerBox);
-
-                        const metaDiv = document.createElement('div');
-                        metaDiv.classList.add('msg-meta');
-                        metaDiv.innerHTML = `<span class="time">${timeStr}</span><span class="ticks read">✓✓</span>`;
-                        msgDiv.appendChild(metaDiv);
-
-                        messagesContainer.appendChild(msgDiv);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                        
-                        atualizarAtividade();
-                        playPopSound();
-                        stream.getTracks().forEach(track => track.stop());
-                    };
-
-                    mediaRecorder.start();
-                    isRecording = true;
-                    audioBtn.classList.add('recording');
-                    recordingIndicator.style.display = 'flex';
-                    
-                    secondsElapsed = 0;
-                    timerText.textContent = "Gravando: 00:00";
-                    timerInterval = setInterval(() => {
-                        secondsElapsed++;
-                        const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
-                        const secs = (secondsElapsed % 60).toString().padStart(2, '0');
-                        timerText.textContent = `Gravando: ${mins}:${secs}`;
-                    }, 1000);
-
-                } catch (err) {
-                    alert("Não foi possível aceder ao microfone.");
-                }
-            } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                audioBtn.classList.remove('recording');
-                recordingIndicator.style.display = 'none';
-                clearInterval(timerInterval);
+        // Enviar com a tecla Enter
+        document.getElementById('messageInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
         });
     </script>
